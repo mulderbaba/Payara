@@ -103,4 +103,13 @@ public class GlassFishWeldProvider implements CDIProvider {
       }
     }
 
+    @Override
+    public boolean isInitialized() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public CDI<Object> initialize(Map<String, Object> params) {
+        throw new UnsupportedOperationException();
+    }
 }
