@@ -20,6 +20,7 @@ package fish.payara.nucleus.requesttracing.admin;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import fish.payara.nucleus.requesttracing.RequestTracingService;
 import fish.payara.nucleus.requesttracing.configuration.RequestTracingServiceConfiguration;
 import org.glassfish.api.ActionReport;
@@ -39,9 +40,11 @@ import javax.inject.Inject;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.glassfish.hk2.api.ServiceLocator;
 
 
 /**
@@ -49,15 +52,15 @@ import java.util.logging.Logger;
  *
  * @author mertcaliskan
  */
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
+@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG})
 @Service(name = "requesttracing-configure")
-@PerLookup
 @CommandLock(CommandLock.LockType.NONE)
+@PerLookup
 @I18n("requesttracing.configure")
-@ExecuteOn(RuntimeType.INSTANCE)
-@TargetType(value = {CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean = Domain.class,
-            opType = RestEndpoint.OpType.GET,
+            opType = RestEndpoint.OpType.POST,
             path = "requesttracing-configure",
             description = "Enables/Disables Request Tracing Service")
 })
@@ -74,14 +77,14 @@ public class RequestTracingConfigurer implements AdminCommand {
     @Inject
     protected Target targetUtil;
 
-    @Param(name = "dynamic", optional = true, defaultValue = "false")
-    protected Boolean dynamic;
+    @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    String target;
 
-    @Param(name = "target", optional = true, defaultValue = "server")
-    protected String target;
-
-    @Param(name = "enabled", optional = true)
+    @Param(name = "enabled", optional = false)
     private Boolean enabled;
+
+    @Param(name = "dynamic", optional = true, defaultValue = "false")
+    private Boolean dynamic;
 
     @Param(name = "thresholdUnit", optional = true)
     private String unit;
@@ -89,10 +92,23 @@ public class RequestTracingConfigurer implements AdminCommand {
     @Param(name = "thresholdValue", optional = true)
     private String value;
 
+    @Inject
+    ServiceLocator serviceLocator;
+
     @Override
     public void execute(AdminCommandContext context) {
+        final AdminCommandContext theContext = context;
         final ActionReport actionReport = context.getActionReport();
+        Properties extraProperties = actionReport.getExtraProperties();
+        if (extraProperties == null) {
+            extraProperties = new Properties();
+            actionReport.setExtraProperties(extraProperties);
+        }
 
+         if (!validate(actionReport)) {
+            return;
+        }
+         
         Config config = targetUtil.getConfig(target);
         final RequestTracingServiceConfiguration requestTracingServiceConfiguration = config.getExtensionByType(RequestTracingServiceConfiguration.class);
 
@@ -125,7 +141,7 @@ public class RequestTracingConfigurer implements AdminCommand {
         }
 
         if (dynamic) {
-            enableOnTarget(actionReport, context, enabled);
+            enableOnTarget(actionReport, theContext, enabled);
         }
     }
 
@@ -145,5 +161,24 @@ public class RequestTracingConfigurer implements AdminCommand {
             actionReport.appendMessage(strings.getLocalString("requesttracing.configure.thresholdunit.success",
                     "Request Tracing Service Threshold Unit is set to {0}.", unit) + "\n");
         }
+    }
+
+    private boolean validate(ActionReport actionReport) {
+        boolean result = false;
+        if (value != null) {
+            try {
+                int port = Integer.parseInt(value);
+                if (port < 0 || port > Short.MAX_VALUE * 2) {
+                    actionReport.failure(logger, "Threshold Value must be greater than zero or less than " + Short.MAX_VALUE * 2 + 1);
+                    return result;
+                }
+            } catch (NumberFormatException nfe) {
+                actionReport.failure(logger, "Threshold Value is not a valid integer", nfe);
+                return result;
+            }
+
+        }
+
+        return true;
     }
 }
