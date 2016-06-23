@@ -20,7 +20,7 @@
     <sun:tab id="requestTracingConfigure" immediate="true" text="$resource{i18nrt.requestTracing.requestTracingConfigure}" toolTip="$resource{i18nrt.requestTracing.requestTracingConfigureTab}">
 	<!command
            setSessionAttribute(key="requestTracingTabs" value="requestTracingConfigure");
-           gf.redirect(page="#{request.contextPath}/payaraExtras/requesttracing.jsf?configName=#{pageSession.configName}");
+           gf.redirect(page="#{request.contextPath}/payaraExtras/requestTracing.jsf?configName=#{pageSession.configName}");
 	/>
     </sun:tab>
 

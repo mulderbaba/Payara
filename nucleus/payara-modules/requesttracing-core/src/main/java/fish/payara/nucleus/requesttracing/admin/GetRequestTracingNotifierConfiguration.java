@@ -66,7 +66,7 @@ public class GetRequestTracingNotifierConfiguration implements AdminCommand {
 
         final ActionReport actionReport = context.getActionReport();
 
-        String headers[] = {"Enabled", "NotifierName"};
+        String headers[] = {"Enabled", "NotifierServiceName"};
         ColumnFormatter columnFormatter = new ColumnFormatter(headers);
 
         RequestTracingServiceConfiguration configuration = config.getExtensionByType(RequestTracingServiceConfiguration.class);
@@ -79,7 +79,7 @@ public class GetRequestTracingNotifierConfiguration implements AdminCommand {
 
             Object values[] = new Object[2];
             values[0] = logNotifier.getEnabled();
-            values[1] = notifierHandle.getService().getType().toString();
+            values[1] = notifierHandle.getActiveDescriptor().getName();
             columnFormatter.addRow(values);
 
             Map<String, Object> map = new HashMap<String, Object>(2);

@@ -22,7 +22,7 @@
 <!--  ===================================== Nodes ======================  -->
 <sun:treeNode  id="requesttracing"
     text="$resource{i18nrt.tree.requestTracing}"
-    url="/payaraExtras/requesttracing.jsf?configName=${configName}"
+    url="/payaraExtras/requestTracing.jsf?configName=${configName}"
     imageURL="/resource/images/batchLogo.png"
     >
     <!beforeCreate

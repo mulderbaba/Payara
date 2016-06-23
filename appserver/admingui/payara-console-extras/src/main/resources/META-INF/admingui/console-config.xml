@@ -53,7 +53,7 @@
             type="org.glassfish.admingui:navNode"
             priority="60"
             parentId="#{configNameId}"
-            content="pluginTreeNodeRequesttracing.jsf"
+            content="pluginTreeNodeRequestTracing.jsf"
             />
  
     <integration-point
@@ -61,6 +61,6 @@
             type="org.glassfish.admingui:configuration"
             priority="60"
             parentId="propSheetSection"
-            content="requesttracingConfigLink.jsf"
+            content="requestTracingConfigLink.jsf"
             />
  </console-config>

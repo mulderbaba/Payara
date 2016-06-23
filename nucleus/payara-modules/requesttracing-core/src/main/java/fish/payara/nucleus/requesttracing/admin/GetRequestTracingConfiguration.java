@@ -46,7 +46,7 @@ import java.util.Properties;
 })
 public class GetRequestTracingConfiguration implements AdminCommand {
 
-    final static String notifiersHeaders[] = {"Name", "Enabled"};
+    final static String notifiersHeaders[] = {"Name", "Service Name", "Enabled"};
 
     @Inject
     ServiceLocator habitat;
@@ -90,16 +90,18 @@ public class GetRequestTracingConfiguration implements AdminCommand {
         extraProps.put("getRequesttracingConfiguration", map);
         mainActionReport.setExtraProperties(extraProps);
         mainActionReport.setMessage(columnFormatter.toString());
-        mainActionReport.appendMessage("Below are the list of notifier details listed by name.");
+        mainActionReport.appendMessage("\n");
+        mainActionReport.appendMessage("\n" + "Below are the list of notifier details listed by name.");
 
         for (ServiceHandle<BaseNotifierService> notifierHandle : allNotifierHandles) {
             Notifier notifier = configuration.getNotifierByType(notifierHandle.getService().getNotifierType());
 
             if (notifier instanceof LogNotifier) {
                 LogNotifier logNotifier = (LogNotifier) notifier;
-                Object values2[] = new Object[2];
+                Object values2[] = new Object[3];
                 values2[0] = notifierHandle.getService().getType().toString();
-                values2[1] = logNotifier.getEnabled();
+                values2[1] = notifierHandle.getActiveDescriptor().getName();
+                values2[2] = logNotifier.getEnabled();
                 notifiersColumnFormatter.addRow(values2);
             }
         }

@@ -22,9 +22,7 @@
     setResourceBundle(key="i18nrt" bundle="fish.payara.admingui.extras.Strings");
     />
 <!composition template="/templates/default.layout"  guiTitle="Request Tracing Configuration"  >
-
 <!define name="content">
-
 <event>
     <!beforeCreate   
         setSessionAttribute(key="requestTracingTabs" value="requestTracingConfigureNotifier"); 
@@ -44,7 +42,6 @@
         setPageSessionAttribute(key="dynamic", value="true");
         /> 
 </event>
-
 <sun:form id="propertyForm">
 #include "/payaraExtras/requestTracingTabs.inc"
 #include "/common/shared/alertMsg_1.inc"
@@ -63,16 +60,17 @@
         </sun:panelGroup>
     </facet>
 </sun:title>
+#include "/common/shared/configNameSection.inc"
 <sun:propertySheetSection >
+    <sun:property id="notifierServiceNameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.name}">
+        <sun:staticText id="notifierName" text="#{pageSession.valueMap['notifierName']}"/>
+    </sun:property> 
     <sun:property id="enabledProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.enabled}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.enabledHelp}">
         <sun:checkbox id="enabledProp" selected="#{pageSession.enabledSelected}" selectedValue="true" />
     </sun:property>
     <sun:property id="dynamic" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.dynamic}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.dynamicHelp}">
         <sun:checkbox id="dynamic" selected="#{pageSession.dynamic}" selectedValue="true" />
-    </sun:property>
-    <sun:property id="notifierNameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.name}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.nameHelp}">
-        <sun:textField id="notifierName" columns="$int{40}" maxLength="30" text="#{pageSession.valueMap['notifierName']}" />
-    </sun:property>   
+    </sun:property> 
 </sun:propertySheetSection>
 </sun:form>
 </define>
