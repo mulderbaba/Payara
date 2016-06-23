@@ -61,6 +61,6 @@
             type="org.glassfish.admingui:configuration"
             priority="60"
             parentId="propSheetSection"
-            content="requestTracingConfigLink.jsf"
+            content="requestTracing/requestTracingConfigLink.jsf"
             />
  </console-config>

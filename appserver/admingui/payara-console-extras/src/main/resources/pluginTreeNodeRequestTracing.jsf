@@ -22,8 +22,8 @@
 <!--  ===================================== Nodes ======================  -->
 <sun:treeNode  id="requesttracing"
     text="$resource{i18nrt.tree.requestTracing}"
-    url="/payaraExtras/requestTracing.jsf?configName=${configName}"
-    imageURL="/resource/images/batchLogo.png"
+    url="/payaraExtras/requestTracing/requestTracing.jsf?configName=${configName}"
+    imageURL="/resource/images/requestTracing.png"
     >
     <!beforeCreate
         setResourceBundle(key="i18nrt" bundle="fish.payara.admingui.extras.Strings");

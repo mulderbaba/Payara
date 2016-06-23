@@ -20,9 +20,9 @@
 <sun:property>
     <sun:hyperlink 
         toolTip="$resource{i18nrt.tree.requestTracing}"
-        url="/payaraExtras/requestTracing.jsf?configName=#{configName}"
+        url="/payaraExtras/requestTracing/requestTracing.jsf?configName=#{configName}"
         >
-        <sun:image url="/resource/images/batchLogo.png" />
+        <sun:image url="/resource/images/requestTracing.png" />
         <sun:staticText text="$resource{i18nrt.tree.requestTracing}" />
     </sun:hyperlink>
     <!beforeCreate
