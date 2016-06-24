@@ -93,8 +93,8 @@ public class RequestTracingNotifierConfigurer implements AdminCommand {
     @Param(name = "notifierName", optional = true)
     private String notifierName;
 
-    @Param(name = "enabled", optional = false)
-    private Boolean enabled;
+    @Param(name = "notifierEnabled", optional = false)
+    private Boolean notifierEnabled;
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -126,14 +126,14 @@ public class RequestTracingNotifierConfigurer implements AdminCommand {
                     public Object run(final RequestTracingServiceConfiguration requestTracingServiceConfigurationProxy) throws
                             PropertyVetoException, TransactionFailure {
                         Notifier notifierProxy = (Notifier) requestTracingServiceConfigurationProxy.createChild(notifierService.getNotifierType());
-                        if (enabled != null) {
-                            notifierProxy.enabled(enabled);
+                        if (notifierEnabled != null) {
+                            notifierProxy.enabled(notifierEnabled);
                         }
                         createdNotifier[0] = notifierProxy;
 
                         List<Notifier> notifierList = requestTracingServiceConfigurationProxy.getNotifierList();
                         NotifierExecutionOptions executionOptions = factory.build(createdNotifier[0]);
-                        if (enabled) {
+                        if (notifierEnabled) {
                             notifierList.add(createdNotifier[0]);
                             if (dynamic) {
                                 service.getExecutionOptions().getNotifierExecutionOptionsList().add(executionOptions);
@@ -154,13 +154,13 @@ public class RequestTracingNotifierConfigurer implements AdminCommand {
                     @Override
                     public Object run(final Notifier notifierProxy) throws
                             PropertyVetoException, TransactionFailure {
-                        if (enabled != null) {
-                            notifierProxy.enabled(enabled);
+                        if (notifierEnabled != null) {
+                            notifierProxy.enabled(notifierEnabled);
                         }
 
                         if (dynamic) {
                             NotifierExecutionOptions executionOptions = factory.build(notifierProxy);
-                            if (enabled) {
+                            if (notifierEnabled) {
                                 service.getExecutionOptions().getNotifierExecutionOptionsList().add(executionOptions);
                             } else {
                                 service.getExecutionOptions().getNotifierExecutionOptionsList().remove(executionOptions);
@@ -175,7 +175,7 @@ public class RequestTracingNotifierConfigurer implements AdminCommand {
             }
 
             actionReport.appendMessage(strings.getLocalString("requesttracing.configure.notifier.added.configured",
-                    "Request Tracing Notifier with name {0} is registered and set enabled to {1}.", notifierName, enabled) + "\n");
+                    "Request Tracing Notifier with name {0} is registered and set enabled to {1}.", notifierName, notifierEnabled) + "\n");
         } catch (TransactionFailure ex) {
             logger.log(Level.WARNING, "Exception during command ", ex);
             actionReport.setMessage(ex.getCause().getMessage());

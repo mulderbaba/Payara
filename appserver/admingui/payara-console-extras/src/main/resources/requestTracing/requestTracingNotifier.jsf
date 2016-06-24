@@ -35,9 +35,9 @@
         gf.restRequest(endpoint="#{sessionScope.REST_URL}/get-requesttracing-notifier-configuration?target=#{pageSession.configName}"  method="GET" result="#{requestScope.resp}");
         setPageSessionAttribute(key="valueMap", value="#{requestScope.resp.data.extraProperties.getRequesttracingNotifierConfiguration}");
         mapPut(map="#{pageSession.valueMap}" key="target" value="#{pageSession.configName}");
-        setPageSessionAttribute(key="convertToFalseList", value={"enabled","dynamic"});
-        if (#{pageSession.valueMap['enabled']}=true) {
-            setPageSessionAttribute(key="enabledSelected", value="true");
+        setPageSessionAttribute(key="convertToFalseList", value={"notifierEnabled","dynamic"});
+        if (#{pageSession.valueMap['notifierEnabled']}=true) {
+            setPageSessionAttribute(key="notifierEnabledSelected", value="true");
         }
         setPageSessionAttribute(key="dynamic", value="true");
         /> 
@@ -51,7 +51,7 @@
             <sun:button id="saveButton"  text="$resource{i18n.button.Save}"
                         onClick="submitAndDisable(this, '$resource{i18n.button.Processing}'); return false;" >
                 <!command
-                    mapPut(map="#{pageSession.valueMap}" key="enabled" value="#{pageSession.enabledSelected}");
+                    mapPut(map="#{pageSession.valueMap}" key="notifierEnabled" value="#{pageSession.notifierEnabledSelected}");
                     mapPut(map="#{pageSession.valueMap}" key="dynamic" value="#{pageSession.dynamic}");
                     prepareSuccessfulMsg();
                     gf.updateEntity(endpoint="#{sessionScope.REST_URL}/requesttracing-configure-notifier" attrs="#{pageSession.valueMap}" convertToFalse="#{pageSession.convertToFalseList}");
@@ -65,8 +65,8 @@
     <sun:property id="notifierServiceNameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.name}">
         <sun:staticText id="notifierName" text="#{pageSession.valueMap['notifierName']}"/>
     </sun:property> 
-    <sun:property id="enabledProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.enabled}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.enabledHelp}">
-        <sun:checkbox id="enabledProp" selected="#{pageSession.enabledSelected}" selectedValue="true" />
+    <sun:property id="notifierEnabledProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.enabled}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.enabledHelp}">
+        <sun:checkbox id="notifierEnabled" selected="#{pageSession.notifierEnabledSelected}" selectedValue="true" />
     </sun:property>
     <sun:property id="dynamic" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nrt.requestTracing.configuration.notifier.dynamic}"  helpText="$resource{i18nrt.requestTracing.configuration.notifier.dynamicHelp}">
         <sun:checkbox id="dynamic" selected="#{pageSession.dynamic}" selectedValue="true" />
