@@ -93,12 +93,11 @@ public class GetNotificationNotifierConfiguration implements AdminCommand {
         ColumnFormatter columnFormatter = new ColumnFormatter(headers);
 
         NotificationServiceConfiguration configuration = config.getExtensionByType(NotificationServiceConfiguration.class);
-        //List<ServiceHandle<BaseNotifierService>> allNotifierHandles = habitat.getAllServiceHandles(BaseNotifierService.class);
         List<ServiceHandle<BaseNotifierService>> allServiceHandles = habitat.getAllServiceHandles(BaseNotifierService.class);
 
         for (ServiceHandle<BaseNotifierService> serviceHandle : allServiceHandles) {
             
-            NotifierConfiguration notifierConfiguration = configuration.getNotifierConfigurationByType(serviceHandle.getService().getNotifierType());
+            NotifierConfiguration notifierConfiguration = configuration.getNotifierConfigurationByType(serviceHandle.getService().getNotifierConfigType());
             LogNotifierConfiguration logNotifierConfiguration = (LogNotifierConfiguration) notifierConfiguration;
             
             Object values[] = new Object[2];

@@ -92,7 +92,10 @@
        <asadmin-recorder-configuration></asadmin-recorder-configuration>
        <request-tracing-service-configuration>
             <log-notifier></log-notifier>
-        </request-tracing-service-configuration>
+       </request-tracing-service-configuration>
+       <notification-service-configuration>
+            <log-notifier-configuration/>
+       </notification-service-configuration>
        <batch-runtime-configuration data-source-lookup-name="jdbc/__default"></batch-runtime-configuration>
        <diagnostic-service />
       <security-service>
@@ -315,6 +318,9 @@
          <request-tracing-service-configuration>
              <log-notifier></log-notifier>
          </request-tracing-service-configuration>
+         <notification-service-configuration>
+             <log-notifier-configuration/>
+         </notification-service-configuration>
          <diagnostic-service />
       <java-config debug-options="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=${JAVA_DEBUGGER_PORT}" system-classpath="" classpath-suffix="">
         <jvm-options>-XX:MaxPermSize=512m</jvm-options>

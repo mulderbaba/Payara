@@ -49,6 +49,7 @@ import java.util.Properties;
  * Admin command to list Request Tracing Configuration
  *
  * @author mertcaliskan
+ * @author Susan Rai
  */
 @Service(name = "get-requesttracing-configuration")
 @PerLookup

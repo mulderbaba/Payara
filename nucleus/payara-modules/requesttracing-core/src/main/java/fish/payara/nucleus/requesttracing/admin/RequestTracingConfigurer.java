@@ -38,14 +38,11 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 import javax.inject.Inject;
 import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.hk2.api.ServiceLocator;
-
 
 /**
  * Admin command to enable/disable all request tracing services defined in domain.xml.
@@ -105,10 +102,10 @@ public class RequestTracingConfigurer implements AdminCommand {
             actionReport.setExtraProperties(extraProperties);
         }
 
-         if (!validate(actionReport)) {
+        if (!validate(actionReport)) {
             return;
         }
-         
+
         Config config = targetUtil.getConfig(target);
         final RequestTracingServiceConfiguration requestTracingServiceConfiguration = config.getExtensionByType(RequestTracingServiceConfiguration.class);
 
@@ -121,7 +118,7 @@ public class RequestTracingConfigurer implements AdminCommand {
                         if (enabled != null) {
                             requestTracingServiceConfigurationProxy.enabled(enabled.toString());
                         }
-                        if (unit !=null ) {
+                        if (unit != null) {
                             requestTracingServiceConfigurationProxy.setThresholdUnit(unit);
                         }
                         if (value != null) {
@@ -131,8 +128,7 @@ public class RequestTracingConfigurer implements AdminCommand {
                         return requestTracingServiceConfigurationProxy;
                     }
                 }, requestTracingServiceConfiguration);
-            }
-            catch(TransactionFailure ex){
+            } catch (TransactionFailure ex) {
                 logger.log(Level.WARNING, "Exception during command ", ex);
                 actionReport.setMessage(ex.getCause().getMessage());
                 actionReport.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -154,7 +150,7 @@ public class RequestTracingConfigurer implements AdminCommand {
         if (value != null) {
             service.getExecutionOptions().setThresholdValue(Long.valueOf(value));
             actionReport.appendMessage(strings.getLocalString("requesttracing.configure.thresholdvalue.success",
-                    "Request Tracing Service Threshold Value is set to {0}.", value)  + "\n");
+                    "Request Tracing Service Threshold Value is set to {0}.", value) + "\n");
         }
         if (unit != null) {
             service.getExecutionOptions().setThresholdUnit(TimeUnit.valueOf(unit));
