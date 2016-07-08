@@ -1,4 +1,3 @@
-
 /*
 
  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
@@ -16,24 +15,32 @@
  When distributing the software, include this License Header Notice in each
  file and include the License file at packager/legal/LICENSE.txt.
  */
-
-
-package fish.payara.nucleus.requesttracing.admin;
+package fish.payara.nucleus.notification.admin;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.ColumnFormatter;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import fish.payara.nucleus.notification.configuration.LogNotifier;
-import fish.payara.nucleus.notification.configuration.Notifier;
+import fish.payara.nucleus.notification.configuration.LogNotifierConfiguration;
+import fish.payara.nucleus.notification.configuration.NotificationServiceConfiguration;
+import fish.payara.nucleus.notification.configuration.NotifierConfiguration;
 import fish.payara.nucleus.notification.service.BaseNotifierService;
-import fish.payara.nucleus.requesttracing.configuration.RequestTracingServiceConfiguration;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import javax.inject.Inject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
@@ -42,37 +49,30 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.inject.Inject;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
 /**
-
- * Admin command to list Request Tracing Notifier Configuration
- * 
-
+ * Admin command to list Notification Notifier Configuration
+ *
  * @author Susan Rai
  */
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG})
-@Service(name = "get-requesttracing-notifier-configuration")
+@Service(name = "get-notification-notifier-configuration")
 @CommandLock(CommandLock.LockType.NONE)
 @PerLookup
-@I18n("get.requesttracing.notifier.configuration")
+@I18n("get.notification.notifier.configuration")
 @RestEndpoints({
     @RestEndpoint(configBean = Domain.class,
             opType = RestEndpoint.OpType.GET,
-            path = "get-requesttracing-notifier-configuration",
-            description = "List Request Tracing Notifier Configuration")
+            path = "get-notification-notifier-configuration",
+            description = "List Notification Notifier Configuration")
 })
-public class GetRequestTracingNotifierConfiguration implements AdminCommand {
-
-    @Inject
-    ServiceLocator habitat;
+public class GetNotificationNotifierConfiguration implements AdminCommand {
 
     @Inject
     private Target targetUtil;
+
+    @Inject
+    ServiceLocator habitat;
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
@@ -89,31 +89,27 @@ public class GetRequestTracingNotifierConfiguration implements AdminCommand {
 
         final ActionReport actionReport = context.getActionReport();
 
-
-        String headers[] = {"Notifier Enabled", "Notifier Service Name"};
-
+        String headers[] = {"Notifier Enabled", "Notifier Name"};
         ColumnFormatter columnFormatter = new ColumnFormatter(headers);
 
-        RequestTracingServiceConfiguration configuration = config.getExtensionByType(RequestTracingServiceConfiguration.class);
-        List<ServiceHandle<BaseNotifierService>> allNotifierHandles = habitat.getAllServiceHandles(BaseNotifierService.class);
+        NotificationServiceConfiguration configuration = config.getExtensionByType(NotificationServiceConfiguration.class);
+        List<ServiceHandle<BaseNotifierService>> allServiceHandles = habitat.getAllServiceHandles(BaseNotifierService.class);
 
-        
-        for (ServiceHandle<BaseNotifierService> notifierHandle : allNotifierHandles) {
+        for (ServiceHandle<BaseNotifierService> serviceHandle : allServiceHandles) {
             
-            Notifier notifier = configuration.getNotifierByType(notifierHandle.getService().getNotifierType());
-            LogNotifier logNotifier = (LogNotifier) notifier;
-
+            NotifierConfiguration notifierConfiguration = configuration.getNotifierConfigurationByType(serviceHandle.getService().getNotifierConfigType());
+            LogNotifierConfiguration logNotifierConfiguration = (LogNotifierConfiguration) notifierConfiguration;
+            
             Object values[] = new Object[2];
-            values[0] = logNotifier.getEnabled();
-            values[1] = notifierHandle.getActiveDescriptor().getName();
+            values[0] = logNotifierConfiguration.getEnabled();
+            values[1] = serviceHandle.getActiveDescriptor().getName();
             columnFormatter.addRow(values);
 
             Map<String, Object> map = new HashMap<String, Object>(2);
             Properties extraProps = new Properties();
             map.put("notifierEnabled", values[0]);
             map.put("notifierName", values[1]);
-
-            extraProps.put("getRequesttracingNotifierConfiguration", map);
+            extraProps.put("getNotificationNotifierConfiguration", map);
 
             actionReport.setExtraProperties(extraProps);
             actionReport.setMessage(columnFormatter.toString());
@@ -126,6 +122,5 @@ public class GetRequestTracingNotifierConfiguration implements AdminCommand {
 
         actionReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
-
 }
 

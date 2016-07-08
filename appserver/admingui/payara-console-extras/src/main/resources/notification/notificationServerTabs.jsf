@@ -16,21 +16,21 @@
  When distributing the software, include this License Header Notice in each
  file and include the License file at packager/legal/LICENSE.txt.
 -->
-<sun:tab id="asadminRecorder" immediate="true" text="$resource{i18nar.asadminRecorder.asadminRecorderTabs}" toolTip="$resource{i18nar.asadminRecorder.asadminRecorderTabs}">
+<sun:tab id="notification" immediate="true" text="$resource{i18nn.notification.serverTabs}" toolTip="$resource{i18nn.notification.serverTabs}">
     <!beforeCreate
-        setResourceBundle(key="i18nar" bundle="fish.payara.admingui.extras.Strings");
+        setResourceBundle(key="i18nn" bundle="fish.payara.admingui.extras.Strings");
         setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings");
     />
     
     <!command
-        setSessionAttribute(key="serverInstTabs" value="asadminRecorderConfig");
-        gf.redirect(page="#{request.contextPath}/payaraExtras/asadminRecorder/asadminRecorderServer.jsf?target=server&tabSetName=serverInstTabs");
+        setSessionAttribute(key="serverInstTabs" value="notificationServerTab");
+        gf.redirect(page="#{request.contextPath}/payaraExtras/notification/notificationServer.jsf?target=server&tabSetName=serverInstTabs");
     />
 
-    <sun:tab id="asadminRecorderConfig" immediate="$boolean{true}" text="$resource{i18nar.asadminRecorder.configuration}" toolTip="$resource{i18nar.asadminRecorder.configurationTip}" >
+    <sun:tab id="notificationServerTab" immediate="$boolean{true}" text="$resource{i18nn.notification.serverTabs}" toolTip="$resource{i18nn.notification.serverTabs}" >
         <!command
-            setSessionAttribute(key="serverInstTabs" value="asadminRecorderConfig");
-            gf.redirect(page="#{request.contextPath}/payaraExtras/asadminRecorder/asadminRecorderServer.jsf?target=server&tabSetName=serverInstTabs");
+            setSessionAttribute(key="serverInstTabs" value="notificationServerTab");
+            gf.redirect(page="#{request.contextPath}/payaraExtras/notification/notificationServer.jsf?target=server&tabSetName=serverInstTabs");
         />
     </sun:tab>
 </sun:tab>
