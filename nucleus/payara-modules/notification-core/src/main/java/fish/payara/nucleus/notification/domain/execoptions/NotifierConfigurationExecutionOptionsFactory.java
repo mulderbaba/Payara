@@ -13,6 +13,7 @@
  */
 package fish.payara.nucleus.notification.domain.execoptions;
 
+import fish.payara.nucleus.notification.configuration.EmailNotifierConfiguration;
 import fish.payara.nucleus.notification.configuration.LogNotifierConfiguration;
 import fish.payara.nucleus.notification.configuration.NotifierConfiguration;
 import org.jvnet.hk2.annotations.Service;
@@ -31,6 +32,11 @@ public class NotifierConfigurationExecutionOptionsFactory {
     public NotifierConfigurationExecutionOptions build(NotifierConfiguration notifierConfiguration) {
         if (notifierConfiguration instanceof LogNotifierConfiguration) {
             LogNotifierConfigurationExecutionOptions executionOptions = new LogNotifierConfigurationExecutionOptions();
+            executionOptions.setEnabled(notifierConfiguration.getEnabled());
+            return executionOptions;
+        }
+        if (notifierConfiguration instanceof EmailNotifierConfiguration) {
+            EmailNotifierConfigurationExecutionOptions executionOptions = new EmailNotifierConfigurationExecutionOptions();
             executionOptions.setEnabled(notifierConfiguration.getEnabled());
             return executionOptions;
         }

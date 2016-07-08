@@ -96,6 +96,20 @@ public class NotificationNotifierConfigurer implements AdminCommand {
 
     @Param(name = "notifierEnabled", optional = false)
     private Boolean notifierEnabled;
+    
+    @Param(name = "Email username", optional = true)
+    private String username;
+        
+    @Param(name = "Email password", optional =true)
+    private String password;
+            
+    @Param(name = "Email port", optional = true)
+    private String emailPort;
+                
+    @Param(name = "Email host", optional = true)
+    private String host;
+    
+    
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -129,6 +143,7 @@ public class NotificationNotifierConfigurer implements AdminCommand {
                         NotifierConfiguration notifierProxy = (NotifierConfiguration) notificationServiceConfigurationProxy.createChild(notifierService.getNotifierConfigType());
                         if (notifierEnabled != null) {
                             notifierProxy.enabled(notifierEnabled);
+                            
                         }
                         createdNotifier[0] = notifierProxy;
 

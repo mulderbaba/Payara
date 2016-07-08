@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import java.util.logging.Level;
 
 import static fish.payara.nucleus.notification.TimeHelper.prettyPrintDuration;
+import fish.payara.nucleus.notification.domain.EmailNotificationEvent;
 
 /**
  * @author mertcaliskan
@@ -44,6 +45,10 @@ class RequestTracingNotificationEventFactory {
             event.setUserMessage("Request execution exceeded the given threshold");
             event.setLevel(Level.INFO);
             event.setMessage(getRequestEventsAsStr());
+            return event;
+        }
+        if (NotifierType.EMAIL.equals(notifierType)) {
+            EmailNotificationEvent event = new EmailNotificationEvent();           
             return event;
         }
         return null;

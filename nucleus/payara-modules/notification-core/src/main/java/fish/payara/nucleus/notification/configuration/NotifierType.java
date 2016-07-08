@@ -19,7 +19,7 @@ package fish.payara.nucleus.notification.configuration;
  * The type of notifer types that notification service supports.
  */
 public enum NotifierType {
-    LOG
+    EMAIL, LOG
     // More types will be here soon! Things we have in mind:
     // PAYARA-704 - Slack NotifierConfiguration
     // PAYARA-703 - HipChat NotifierConfiguration
