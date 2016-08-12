@@ -301,7 +301,10 @@
         javax.servlet.jsp.jar
         jspcaching-connector.jar
         web-glue.jar
-        bean-validator.jar
+        validation-api.jar
+        hibernate-validator.jar
+        jboss-logging.jar
+        classmate.jar
         javax.ejb.jar
         javax.enterprise.deploy-api.jar
         javax.jms-api.jar

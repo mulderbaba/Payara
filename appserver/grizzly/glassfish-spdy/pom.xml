@@ -169,7 +169,7 @@
             <groupId>org.glassfish.main.grizzly</groupId>
             <artifactId>grizzly-config</artifactId>
             <version>${project.version}</version>
-        </dependency>        
+        </dependency>
     </dependencies>
     
     <properties>
