@@ -40,8 +40,10 @@
     holder.
 
 -->
+<!-- Portions Copyright [2016] [Payara Foundation and/or its affiliates] -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>deployment</artifactId>
@@ -51,11 +53,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>deployment-javaee-core</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Deployment Related JavaEE Core Classes</name>
 
     <developers>
-     <developer>
+        <developer>
             <id>hzhang_jn</id>
             <name>Hong Zhang</name>
             <url>http://blogs.sun.com/misty</url>
@@ -95,36 +97,50 @@
             </resource>
         </resources>
         <plugins>
-               <plugin>
-                   <groupId>org.apache.maven.plugins</groupId>
-                   <artifactId>maven-dependency-plugin</artifactId>
-                   <executions>
-                       <execution>
-                           <id>unpack</id>
-                           <phase>process-classes</phase>
-                           <goals>
-                             <goal>unpack</goal>
-                           </goals>
-                           <configuration>
-                               <artifactItems>
-                                   <artifactItem>
-                                       <groupId>org.glassfish.docs.man</groupId>
-                                       <artifactId>deployment-javaee-core-manpage</artifactId>
-                                       <version>${v3-docs.version}</version>
-                                       <type>zip</type>
-                                       <overWrite>true</overWrite>
-                                       <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                                   </artifactItem>
-                                </artifactItems>
-                           </configuration>
-                      </execution>
-                   </executions>
-              </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.docs.man</groupId>
+                                    <artifactId>deployment-javaee-core-manpage</artifactId>
+                                    <version>${v3-docs.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
     <dependencies>
-       <dependency>
+        <dependency>
             <groupId>javax.enterprise.deploy</groupId>
             <artifactId>javax.enterprise.deploy-api</artifactId>
         </dependency>
@@ -157,7 +173,7 @@
             <artifactId>common-util</artifactId>
             <version>${project.version}</version>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>deployment-common</artifactId>
             <version>${project.version}</version>

@@ -40,8 +40,10 @@
     holder.
 
 -->
+<!-- Portions Copyright [2016] [Payara Foundation and/or its affiliates] -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.glassfish.main.security</groupId>
@@ -50,9 +52,9 @@
     </parent>
     <artifactId>security</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Security Core Classes</name>
-    
+
     <developers>
         <developer>
             <id>kumarjayanti</id>
@@ -85,13 +87,13 @@
                     <include>**/*.properties</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.1</include>
@@ -103,31 +105,31 @@
                     <include>**/admin-keyfile</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/keyfile</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.jks</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/secure.seed</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/server.policy</include>
                 </includes>
             </resource>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/login.conf</include>
@@ -135,59 +137,73 @@
             </resource>
         </resources>
         <plugins>
-           <plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-dependency-plugin</artifactId>
-           <executions>
-             <execution>
-               <id>copy-installed</id>
-               <phase>process-classes</phase>
-               <goals>
-                 <goal>copy</goal>
-               </goals>
-               <configuration>
-                 <artifactItems>
-                   <artifactItem>
-                     <groupId>solarisrealm</groupId>
-                     <artifactId>libsolsparcauth</artifactId>
-                     <version>1.0</version>
-                     <type>so</type>
-                   </artifactItem>
-                   <artifactItem>
-                     <groupId>solarisrealm</groupId>
-                     <artifactId>libsolx86auth</artifactId>
-                     <version>1.0</version>
-                     <type>so</type>
-                   </artifactItem>
-                 </artifactItems>
-                 <stripVersion>
-                    true
-                 </stripVersion>
-                 <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory>-->
-                 <outputDirectory>target/classes</outputDirectory>
-               </configuration>
-             </execution>
-            <execution>
-                <id>unpack</id>
-                <phase>process-classes</phase>
-                <goals>
-                    <goal>unpack</goal>
-                </goals>
-                <configuration>
-                    <artifactItems>
-                        <artifactItem>
-                            <groupId>org.glassfish.docs.man</groupId>
-                            <artifactId>security-manpage</artifactId>
-                            <version>${v3-docs.version}</version>
-                            <type>zip</type>
-                            <overWrite>true</overWrite>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                        </artifactItem>
-                    </artifactItems>
-                </configuration>
-            </execution>             
-           </executions>
-         </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-installed</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>solarisrealm</groupId>
+                                    <artifactId>libsolsparcauth</artifactId>
+                                    <version>1.0</version>
+                                    <type>so</type>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>solarisrealm</groupId>
+                                    <artifactId>libsolx86auth</artifactId>
+                                    <version>1.0</version>
+                                    <type>so</type>
+                                </artifactItem>
+                            </artifactItems>
+                            <stripVersion>
+                                true
+                            </stripVersion>
+                            <!--<outputDirectory>${maven.project.build.outputDirectory}</outputDirectory>-->
+                            <outputDirectory>target/classes</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.docs.man</groupId>
+                                    <artifactId>security-manpage</artifactId>
+                                    <version>${v3-docs.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>
@@ -237,12 +253,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-	    <groupId>org.glassfish.external</groupId>
-	    <artifactId>management-api</artifactId>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>management-api</artifactId>
         </dependency>
         <dependency>
-    	    <groupId>org.glassfish.gmbal</groupId>
-	    <artifactId>gmbal</artifactId>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
