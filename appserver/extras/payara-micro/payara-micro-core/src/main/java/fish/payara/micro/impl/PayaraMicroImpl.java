@@ -67,6 +67,8 @@ import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import fish.payara.nucleus.healthcheck.HealthCheckService;
 import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -993,11 +995,12 @@ public class PayaraMicroImpl implements PayaraMicroBoot {
             configureAccessLogging();
             configureHazelcast();
             configurePhoneHome();
-            configureHealthCheck();
+            configureHealthCheckPreBoot();
 
             // boot the server
             preBootCommands.executeCommands(gf.getCommandRunner());
             gf.start();
+
             postBootCommands.executeCommands(gf.getCommandRunner());
             this.runtime = new PayaraMicroRuntimeImpl(gf, gfruntime);
 
@@ -1005,6 +1008,7 @@ public class PayaraMicroImpl implements PayaraMicroBoot {
             deployAll();
 
             postBootActions();
+            configureHealthCheckPostBoot();
 
             long end = System.currentTimeMillis();
             dumpFinalStatus(end - start);
@@ -2203,9 +2207,16 @@ public class PayaraMicroImpl implements PayaraMicroBoot {
         }
     }
 
-    private void configureHealthCheck() {
+    private void configureHealthCheckPreBoot() {
         if (enableHealthCheck) {
             preBootCommands.add(new BootCommand("set", "configs.config.server-config.health-check-service-configuration.enabled=true"));
+        }
+    }
+
+    private void configureHealthCheckPostBoot() throws GlassFishException {
+        if (enableHealthCheck) {
+            HealthCheckService healthCheckService = gf.getService(HealthCheckService.class);
+            healthCheckService.setEnabled(true);
         }
     }
 
