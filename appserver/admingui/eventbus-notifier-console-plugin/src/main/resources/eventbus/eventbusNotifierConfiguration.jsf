@@ -45,7 +45,7 @@
 <sun:form id="propertyForm">
 #include "/common/shared/alertMsg_1.inc"
 #include "/payaraExtras/notification/notificationConfigTabs.inc"
-    <sun:title id="propertyContentPage" title="$resource{i18nebn.notifier.eventbus.configuration.pageTitle}" 
+    <sun:title id="propertyContentPage" title="$resource{i18nebn.notifier.eventbus.configuration.pageTitle}"
                helpText="$resource{i18nebn.notifier.eventbus.configuration.pageHelpText}" >
         <!facet pageButtonsTop>
             <sun:panelGroup id="topButtons">
@@ -54,8 +54,9 @@
                     <!command
                         mapPut(map="#{pageSession.valueMap}" key="enabled" value="#{pageSession.enabledSelected}");
                         mapPut(map="#{pageSession.valueMap}" key="dynamic" value="#{pageSession.dynamic}");
+                        mapPut(map="#{pageSession.valueMap}" key="loopBack" value="#{pageSession.loopBack}");
                         prepareSuccessfulMsg();
-                        gf.updateEntity(endpoint="#{sessionScope.NOTIFICATION_CONFIG_URL}/notification-eventbus-configure" 
+                        gf.updateEntity(endpoint="#{sessionScope.NOTIFICATION_CONFIG_URL}/notification-eventbus-configure"
                                 attrs="#{pageSession.valueMap}" convertToFalse="#{pageSession.convertToFalseList}");
                         />
                 </sun:button>
@@ -76,12 +77,17 @@
                           helpText="$resource{i18nn.notification.configuration.notifier.dynamicHelp}">
                 <sun:checkbox id="dynamic" selected="#{pageSession.dynamic}" selectedValue="true" />
             </sun:property>
-            <sun:property id="topicNameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" 
-                          label="$resource{i18nebn.notifier.eventbus.configuration.topicNameLabel}"  
-                          helpText="$resource{i18nebn.notifier.eventbus.configuration.topicNameLabelHelpText}">
-                <sun:textField id="topicNameField" columns="$int{75}" maxLength="255" 
-                               text="#{pageSession.valueMap['topicName']}" styleClass="required"  
+            <sun:property id="eventNameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"
+                          label="$resource{i18nebn.notifier.eventbus.configuration.eventNameLabel}"
+                          helpText="$resource{i18nebn.notifier.eventbus.configuration.eventNameLabelHelpText}">
+                <sun:textField id="eventNameField" columns="$int{75}" maxLength="255"
+                               text="#{pageSession.valueMap['eventName']}" styleClass="required"
                                required="#{true}"/>
+            </sun:property>
+            <sun:property id="loopBack" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"
+                          label="$resource{i18nebn.notifier.eventbus.configuration.loopBackLabel}"
+                          helpText="$resource{i18nebn.notifier.eventbus.configuration.loopBackLabelHelpText}">
+                <sun:checkbox id="loopBack" selected="#{pageSession.loopBack}" selectedValue="true" />
             </sun:property>
         </sun:propertySheetSection>
     </sun:propertySheet>

@@ -37,52 +37,57 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package fish.payara.notification.newrelic;
+package fish.payara.notification.eventbus.core;
 
-import com.google.common.eventbus.Subscribe;
-import fish.payara.nucleus.notification.configuration.NewRelicNotifier;
-import fish.payara.nucleus.notification.configuration.NotifierType;
-import fish.payara.nucleus.notification.service.QueueBasedNotifierService;
-import org.glassfish.api.StartupRunLevel;
-import org.glassfish.hk2.runlevel.RunLevel;
+import com.sun.enterprise.util.ColumnFormatter;
+import fish.payara.nucleus.notification.admin.BaseGetNotifierConfiguration;
+import fish.payara.nucleus.notification.configuration.NotificationServiceConfiguration;
+import org.glassfish.api.admin.*;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author mertcaliskan
  */
-@Service(name = "service-newrelic")
-@RunLevel(StartupRunLevel.VAL)
-public class NewRelicNotifierService extends QueueBasedNotifierService<NewRelicNotificationEvent,
-        NewRelicNotifier,
-        NewRelicNotifierConfiguration,
-        NewRelicEventMessageQueue> {
+@Service(name = "get-hello-notifier-configuration")
+@PerLookup
+@CommandLock(CommandLock.LockType.NONE)
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
+@TargetType(value = {CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG})
+@RestEndpoints({
+        @RestEndpoint(configBean = NotificationServiceConfiguration.class,
+                opType = RestEndpoint.OpType.GET,
+                path = "get-hello-notifier-configuration",
+                description = "Lists Eventbus Notifier Configuration")
+})
+public class GetHelloNotifierConfiguration extends BaseGetNotifierConfiguration<EventbusNotifierConfiguration> {
 
-    private NewRelicNotifierConfigurationExecutionOptions executionOptions;
+    @Override
+    protected String listConfiguration(EventbusNotifierConfiguration configuration) {
+        String headers[] = {"Enabled", "Event Name", "Loop Back"};
+        ColumnFormatter columnFormatter = new ColumnFormatter(headers);
+        Object values[] = new Object[3];
 
-    NewRelicNotifierService() {
-        super("newrelic-message-consumer-");
+        values[0] = configuration.getEnabled();
+        values[1] = configuration.getEventName();
+        values[2] = configuration.getLoopBack();
+
+        columnFormatter.addRow(values);
+        return columnFormatter.toString();
     }
 
     @Override
-    @Subscribe
-    public void handleNotification(NewRelicNotificationEvent event) {
-        if (executionOptions.isEnabled()) {
-            NewRelicEventMessage message = new NewRelicEventMessage(event, event.getSubject(), event.getMessage());
-            queue.addMessage(message);
-        }
-    }
+    protected Map<String, Object> getNotifierConfiguration(EventbusNotifierConfiguration configuration) {
+        Map<String, Object> map = new HashMap<>(3);
+        map.put("enabled", configuration.getEnabled());
+        map.put("eventName", configuration.getEventName());
+        map.put("loopBack", configuration.getLoopBack());
 
-    @Override
-    public void bootstrap() {
-        register(NotifierType.NEWRELIC, NewRelicNotifier.class, NewRelicNotifierConfiguration.class, this);
-
-        initializeExecutor();
-        executionOptions = (NewRelicNotifierConfigurationExecutionOptions) getNotifierConfigurationExecutionOptions();
-        scheduledFuture = scheduleExecutor(new NewRelicNotificationRunnable(queue, executionOptions));
-    }
-
-    @Override
-    public void shutdown() {
-        super.reset();
+        return map;
     }
 }

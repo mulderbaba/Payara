@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2016 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016-2017 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -44,7 +44,6 @@ import fish.payara.nucleus.notification.configuration.NotifierType;
 import fish.payara.nucleus.notification.configuration.SlackNotifier;
 import fish.payara.nucleus.notification.service.QueueBasedNotifierService;
 import org.glassfish.api.StartupRunLevel;
-import org.glassfish.api.event.EventTypes;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
 
@@ -79,7 +78,7 @@ public class SlackNotifierService extends QueueBasedNotifierService<SlackNotific
 
         initializeExecutor();
         executionOptions = (SlackNotifierConfigurationExecutionOptions) getNotifierConfigurationExecutionOptions();
-        scheduleExecutor(new SlackNotificationRunnable(queue, executionOptions));
+        scheduledFuture = scheduleExecutor(new SlackNotificationRunnable(queue, executionOptions));
     }
 
     @Override

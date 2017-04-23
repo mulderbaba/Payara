@@ -46,24 +46,34 @@ import fish.payara.nucleus.notification.domain.NotifierConfigurationExecutionOpt
  */
 public class EventbusNotifierConfigurationExecutionOptions extends NotifierConfigurationExecutionOptions {
 
-    private String topicName;
+    private String eventName;
+    private Boolean loopBack;
 
     EventbusNotifierConfigurationExecutionOptions() {
         super(NotifierType.EVENTBUS);
     }
 
-    public String getTopicName() {
-        return topicName;
+    public String getEventName() {
+        return eventName;
     }
 
-    public void setTopicName(String topicName) {
-        this.topicName = topicName;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public Boolean getLoopBack() {
+        return loopBack;
+    }
+
+    public void setLoopBack(Boolean loopBack) {
+        this.loopBack = loopBack;
     }
 
     @Override
     public String toString() {
         return "EventbusNotifierConfigurationExecutionOptions{" +
-                "topicName='" + topicName + '\'' +
+                "eventName='" + eventName + '\'' +
+                ", loopBack=" + loopBack +
                 "} " + super.toString();
     }
 }

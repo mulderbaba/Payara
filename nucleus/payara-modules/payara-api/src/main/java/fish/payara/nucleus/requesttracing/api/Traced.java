@@ -1,7 +1,6 @@
 /*
- * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2017 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -37,52 +36,20 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package fish.payara.notification.newrelic;
+package fish.payara.nucleus.requesttracing.api;
 
-import com.google.common.eventbus.Subscribe;
-import fish.payara.nucleus.notification.configuration.NewRelicNotifier;
-import fish.payara.nucleus.notification.configuration.NotifierType;
-import fish.payara.nucleus.notification.service.QueueBasedNotifierService;
-import org.glassfish.api.StartupRunLevel;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
+import javax.interceptor.InterceptorBinding;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * @author mertcaliskan
  */
-@Service(name = "service-newrelic")
-@RunLevel(StartupRunLevel.VAL)
-public class NewRelicNotifierService extends QueueBasedNotifierService<NewRelicNotificationEvent,
-        NewRelicNotifier,
-        NewRelicNotifierConfiguration,
-        NewRelicEventMessageQueue> {
-
-    private NewRelicNotifierConfigurationExecutionOptions executionOptions;
-
-    NewRelicNotifierService() {
-        super("newrelic-message-consumer-");
-    }
-
-    @Override
-    @Subscribe
-    public void handleNotification(NewRelicNotificationEvent event) {
-        if (executionOptions.isEnabled()) {
-            NewRelicEventMessage message = new NewRelicEventMessage(event, event.getSubject(), event.getMessage());
-            queue.addMessage(message);
-        }
-    }
-
-    @Override
-    public void bootstrap() {
-        register(NotifierType.NEWRELIC, NewRelicNotifier.class, NewRelicNotifierConfiguration.class, this);
-
-        initializeExecutor();
-        executionOptions = (NewRelicNotifierConfigurationExecutionOptions) getNotifierConfigurationExecutionOptions();
-        scheduledFuture = scheduleExecutor(new NewRelicNotificationRunnable(queue, executionOptions));
-    }
-
-    @Override
-    public void shutdown() {
-        super.reset();
-    }
-}
+@InterceptorBinding
+@Target({ TYPE, METHOD })
+@Retention(RUNTIME)
+public @interface Traced {}

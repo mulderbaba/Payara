@@ -46,7 +46,6 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.UnsupportedEncodingException;
 
 /**
  * @author mertcaliskan
@@ -62,11 +61,12 @@ public class EventbusNotifierConfigurationExecutionOptionsFactory
     }
 
     @Override
-    public EventbusNotifierConfigurationExecutionOptions build(EventbusNotifierConfiguration notifierConfiguration) throws UnsupportedEncodingException {
+    public EventbusNotifierConfigurationExecutionOptions build(EventbusNotifierConfiguration notifierConfiguration)  {
         EventbusNotifierConfigurationExecutionOptions executionOptions = new EventbusNotifierConfigurationExecutionOptions();
 
         executionOptions.setEnabled(Boolean.parseBoolean(notifierConfiguration.getEnabled()));
-        executionOptions.setTopicName(notifierConfiguration.getTopicName());
+        executionOptions.setLoopBack(Boolean.parseBoolean(notifierConfiguration.getLoopBack()));
+        executionOptions.setEventName(notifierConfiguration.getEventName());
 
         return executionOptions;
     }

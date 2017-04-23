@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2017 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2016 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -37,52 +37,49 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package fish.payara.notification.newrelic;
+package fish.payara.micro.cdi;
 
-import com.google.common.eventbus.Subscribe;
-import fish.payara.nucleus.notification.configuration.NewRelicNotifier;
-import fish.payara.nucleus.notification.configuration.NotifierType;
-import fish.payara.nucleus.notification.service.QueueBasedNotifierService;
-import org.glassfish.api.StartupRunLevel;
-import org.glassfish.hk2.runlevel.RunLevel;
-import org.jvnet.hk2.annotations.Service;
+import javax.enterprise.util.Nonbinding;
+import javax.inject.Qualifier;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.*;
 
 /**
- * @author mertcaliskan
+ * Annotation to be applied to a CDI event @Inject point to send it remotely via CDI event bus. Such events can be observed using the {@link Inbound} qualifier.
+ *
+ * @author steve
  */
-@Service(name = "service-newrelic")
-@RunLevel(StartupRunLevel.VAL)
-public class NewRelicNotifierService extends QueueBasedNotifierService<NewRelicNotificationEvent,
-        NewRelicNotifier,
-        NewRelicNotifierConfiguration,
-        NewRelicEventMessageQueue> {
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+@Target({METHOD, FIELD, PARAMETER})
+public @interface Outbound {
 
-    private NewRelicNotifierConfigurationExecutionOptions executionOptions;
+    /**
+     * Provides a further level of filtering. Specify an eventname to restrict
+     * event callbacks to events with the specific name
+     * @return
+     */
+    @Nonbinding
+    String eventName() default "";
 
-    NewRelicNotifierService() {
-        super("newrelic-message-consumer-");
-    }
+    /**
+     * Property to set whether the message should also fire on the same instance as well
+     * default is false it won't be fired as an Inbound message on the same instance
+     * @return
+     */
+    @Nonbinding
+    boolean loopBack() default false;
 
-    @Override
-    @Subscribe
-    public void handleNotification(NewRelicNotificationEvent event) {
-        if (executionOptions.isEnabled()) {
-            NewRelicEventMessage message = new NewRelicEventMessage(event, event.getSubject(), event.getMessage());
-            queue.addMessage(message);
-        }
-    }
-
-    @Override
-    public void bootstrap() {
-        register(NotifierType.NEWRELIC, NewRelicNotifier.class, NewRelicNotifierConfiguration.class, this);
-
-        initializeExecutor();
-        executionOptions = (NewRelicNotifierConfigurationExecutionOptions) getNotifierConfigurationExecutionOptions();
-        scheduledFuture = scheduleExecutor(new NewRelicNotificationRunnable(queue, executionOptions));
-    }
-
-    @Override
-    public void shutdown() {
-        super.reset();
-    }
+    /**
+     * Property to restrict the outbound event to specific named server or micro instances.
+     * Default behavior is to fire on all server and micro instances.
+     * Set one or more instance names to restrict the event to firing only
+     * on the specified instances.
+     * @return
+     */
+    @Nonbinding
+    String[] instanceName() default "";
 }

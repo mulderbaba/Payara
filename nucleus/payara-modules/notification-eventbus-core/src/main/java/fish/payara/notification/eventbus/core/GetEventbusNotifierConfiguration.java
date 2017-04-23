@@ -42,13 +42,14 @@ package fish.payara.notification.eventbus.core;
 import com.sun.enterprise.util.ColumnFormatter;
 import fish.payara.nucleus.notification.admin.BaseGetNotifierConfiguration;
 import fish.payara.nucleus.notification.configuration.NotificationServiceConfiguration;
-import java.util.HashMap;
-import java.util.Map;
 import org.glassfish.api.admin.*;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author mertcaliskan
@@ -68,12 +69,13 @@ public class GetEventbusNotifierConfiguration extends BaseGetNotifierConfigurati
 
     @Override
     protected String listConfiguration(EventbusNotifierConfiguration configuration) {
-        String headers[] = {"Enabled", "Topic Name"};
+        String headers[] = {"Enabled", "Event Name", "Loop Back"};
         ColumnFormatter columnFormatter = new ColumnFormatter(headers);
-        Object values[] = new Object[2];
+        Object values[] = new Object[3];
 
         values[0] = configuration.getEnabled();
-        values[1] = configuration.getTopicName();
+        values[1] = configuration.getEventName();
+        values[2] = configuration.getLoopBack();
 
         columnFormatter.addRow(values);
         return columnFormatter.toString();
@@ -81,11 +83,11 @@ public class GetEventbusNotifierConfiguration extends BaseGetNotifierConfigurati
 
     @Override
     protected Map<String, Object> getNotifierConfiguration(EventbusNotifierConfiguration configuration) {
-        Map<String, Object> map = new HashMap<>(2);
-        
+        Map<String, Object> map = new HashMap<>(3);
         map.put("enabled", configuration.getEnabled());
-        map.put("topicName", configuration.getTopicName());
-        
+        map.put("eventName", configuration.getEventName());
+        map.put("loopBack", configuration.getLoopBack());
+
         return map;
     }
 }

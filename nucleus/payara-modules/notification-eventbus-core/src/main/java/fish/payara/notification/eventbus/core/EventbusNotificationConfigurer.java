@@ -66,16 +66,24 @@ import java.beans.PropertyVetoException;
 })
 public class EventbusNotificationConfigurer extends BaseNotificationConfigurer<EventbusNotifierConfiguration, EventbusNotifierService> {
 
-    @Param(name = "topicName", defaultValue = "payara.notification.event", optional = true)
-    private String topicName;
+    @Param(name = "eventName", optional = true)
+    private String eventName;
+
+    @Param(name = "loopBack", defaultValue = "true")
+    private Boolean loopBack;
 
     protected void applyValues(EventbusNotifierConfiguration configuration) throws PropertyVetoException {
+
         if(this.enabled != null) {
             configuration.enabled(this.enabled);
         }
 
-        if(!Strings.isNullOrEmpty(topicName)) {
-            configuration.setTopicName(topicName);
+        if(loopBack != null) {
+            configuration.loopBack(loopBack);
+        }
+
+        if(!Strings.isNullOrEmpty(eventName)) {
+            configuration.setEventName(eventName);
         }
     }
 

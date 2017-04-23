@@ -73,7 +73,6 @@ public class GetLogNotifierConfiguration extends BaseGetNotifierConfiguration<Lo
         Object values[] = new Object[1];
 
         values[0] = configuration.getEnabled();
-
         columnFormatter.addRow(values);
         return columnFormatter.toString();
     }

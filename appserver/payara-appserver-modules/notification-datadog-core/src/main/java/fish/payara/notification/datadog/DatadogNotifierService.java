@@ -78,7 +78,7 @@ public class DatadogNotifierService extends QueueBasedNotifierService<DatadogNot
 
         initializeExecutor();
         executionOptions = (DatadogNotifierConfigurationExecutionOptions) getNotifierConfigurationExecutionOptions();
-        scheduleExecutor(new DatadogNotificationRunnable(queue, executionOptions));
+        scheduledFuture = scheduleExecutor(new DatadogNotificationRunnable(queue, executionOptions));
     }
 
     @Override

@@ -53,7 +53,11 @@ import java.beans.PropertyVetoException;
 @NotifierConfigurationType(type = NotifierType.EVENTBUS)
 public interface EventbusNotifierConfiguration extends NotifierConfiguration {
 
-    @Attribute(defaultValue = "payara.notification.event")
-    String getTopicName();
-    void setTopicName(String value) throws PropertyVetoException;
+    @Attribute(defaultValue = "true", dataType = Boolean.class)
+    String getLoopBack();
+    void loopBack(Boolean value) throws PropertyVetoException;
+
+    @Attribute(defaultValue = "payara.micro.cdi.event")
+    String getEventName();
+    void setEventName(String value) throws PropertyVetoException;
 }
