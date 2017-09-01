@@ -40,8 +40,6 @@
 package fish.payara.nucleus.healthcheck.preliminary;
 
 import fish.payara.nucleus.healthcheck.HealthCheckResult;
-import fish.payara.nucleus.healthcheck.HealthCheckResultEntry;
-import fish.payara.nucleus.healthcheck.HealthCheckResultStatus;
 import fish.payara.nucleus.healthcheck.HealthCheckWithThresholdExecutionOptions;
 import fish.payara.nucleus.healthcheck.configuration.MachineMemoryUsageChecker;
 import org.glassfish.api.StartupRunLevel;
@@ -49,10 +47,6 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.annotation.PostConstruct;
-import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
-import java.lang.reflect.Method;
-import java.text.DecimalFormat;
 
 /**
  * @author mertcaliskan
@@ -62,8 +56,11 @@ import java.text.DecimalFormat;
 public class MachineMemoryUsageHealthCheck extends BaseThresholdHealthCheck<HealthCheckWithThresholdExecutionOptions,
         MachineMemoryUsageChecker> {
 
+//    private SystemInfo systemInfo;
+
     @PostConstruct
     void postConstruct() {
+//        systemInfo = new SystemInfo();
         postConstruct(this, MachineMemoryUsageChecker.class);
     }
 
@@ -80,32 +77,28 @@ public class MachineMemoryUsageHealthCheck extends BaseThresholdHealthCheck<Heal
     @Override
     public HealthCheckResult doCheck() {
         HealthCheckResult result = new HealthCheckResult();
-        try {
-            OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
-            Long totalPhysicalMemSize = invokeMethodFor(osBean, "getTotalPhysicalMemorySize");
-            Long freePhysicalMemSize = invokeMethodFor(osBean, "getFreePhysicalMemorySize");
 
-            double usedPercentage = ((double) (totalPhysicalMemSize - freePhysicalMemSize) / totalPhysicalMemSize) *
-                    100;
-
-            result.add(new HealthCheckResultEntry(decideOnStatusWithRatio(usedPercentage),
-                    "Physical Memory Used: " + prettyPrintBytes((totalPhysicalMemSize - freePhysicalMemSize)) + " - " +
-                            "Total Physical Memory: " + prettyPrintBytes(totalPhysicalMemSize) + " - " +
-                            "Memory Used%: " + new DecimalFormat("#.00").format(usedPercentage) + "%"));
-
-        } catch (Exception exception) {
-            result.add(new HealthCheckResultEntry(HealthCheckResultStatus.CHECK_ERROR,
-                    "Operating system methods cannot be invoked for retrieving physical memory usage values",
-                    exception));
-        }
+//        try {
+//            HardwareAbstractionLayer hardwareAbstractionLayer = systemInfo.getHardware();
+//            GlobalMemory memory = hardwareAbstractionLayer.getMemory();
+//            hardwareAbstractionLayer.getProcessor();
+//
+//            long usedMemoryInBytes = memory.getTotal() - memory.getAvailable();
+//            double usedPercentage = ((double) usedMemoryInBytes / memory.getTotal()) *
+//                    100;
+//
+//            result.add(new HealthCheckResultEntry(decideOnStatusWithRatio(usedPercentage),
+//                    "Physical Memory Used: " + prettyPrintBytes(usedMemoryInBytes) + " - " +
+//                            "Total Physical Memory: " + prettyPrintBytes(memory.getTotal()) + " - " +
+//                            "Memory Used%: " + new DecimalFormat("#.00").format(usedPercentage) + "%"));
+//        }
+//        catch (Exception exception) {
+//            System.out.println("---------exception:  " + exception);
+//            result.add(new HealthCheckResultEntry(HealthCheckResultStatus.CHECK_ERROR,
+//                    "Error occurred while retrieving physical memory usage values", exception));
+//        }
 
         return result;
-    }
-
-    private Long invokeMethodFor(OperatingSystemMXBean osBean, String methodName) throws Exception {
-        Method m = osBean.getClass().getDeclaredMethod(methodName);
-        m.setAccessible(true);
-        return (Long) m.invoke(osBean);
     }
 }
 

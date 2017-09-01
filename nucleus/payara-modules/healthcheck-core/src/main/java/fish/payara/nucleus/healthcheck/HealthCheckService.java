@@ -59,6 +59,9 @@ import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.*;
+import oshi.SystemInfo;
+import oshi.hardware.GlobalMemory;
+import oshi.hardware.HardwareAbstractionLayer;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -238,6 +241,14 @@ public class HealthCheckService implements EventListener, ConfigListener {
     }
 
     private void executeTasks() {
+        SystemInfo systemInfo = new SystemInfo();
+        HardwareAbstractionLayer hardwareAbstractionLayer = systemInfo.getHardware();
+        System.out.println("--------: " + hardwareAbstractionLayer.getComputerSystem());
+        System.out.println("--------: " + hardwareAbstractionLayer.getComputerSystem().getModel());
+        System.out.println("--------: " + hardwareAbstractionLayer.getComputerSystem().getManufacturer());
+        GlobalMemory memory = hardwareAbstractionLayer.getMemory();
+        System.out.println("--------: " + memory);
+
         for (String registeredTaskKey : registeredTasks.keySet()) {
             HealthCheckTask registeredTask = registeredTasks.get(registeredTaskKey);
             logger.info("Scheduling Health Check for task: " + registeredTask.getName());
