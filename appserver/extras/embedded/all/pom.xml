@@ -50,7 +50,6 @@
         <version>5.182-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
     </parent>
-    <groupId>fish.payara.extras</groupId>
     <artifactId>payara-embedded-all</artifactId>
     <name>Embedded Payara All-In-One</name>
 
@@ -358,6 +357,7 @@
            <type>zip</type>
            <optional>true</optional>
        </dependency>
+
        <dependency>
             <groupId>org.glassfish.main.packager</groupId>
             <artifactId>payara-executor-service</artifactId>
@@ -365,7 +365,15 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
-    </dependencies>
+
+       <dependency>
+           <groupId>fish.payara.packager</groupId>
+           <artifactId>azure-ad-connector-package</artifactId>
+           <version>${project.version}</version>
+           <type>zip</type>
+           <optional>true</optional>
+       </dependency>
+   </dependencies>
 
     <profiles>
         <profile>
